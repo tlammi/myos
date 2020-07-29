@@ -1,0 +1,2 @@
+objs += src/main.o
+
