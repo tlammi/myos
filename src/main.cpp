@@ -15,6 +15,5 @@ extern "C" void call_ctors(){
 }
 
 extern "C" void kernel_main(void* multiboot, unsigned int magic){
-	log::print(log::DEBUG) << "                          \n";
-	log::print(log::DEBUG) << "hello, world\n";
+	log::print(log::DEBUG) << "hello, world";
 }
