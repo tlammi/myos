@@ -4,16 +4,16 @@ OUTPUT_ARCH(i386:i386)
 /*OUTPUT_FORMAT(elf64-x86-64)*/
 
 SECTIONS{
-	. = 0x1000;
-	.text : {
-		*(.entry)
-		. = ALIGN(8);
+	. = 1M;
+	.text BLOCK(4K): ALIGN(4K) {
 		KEEP(*(.multiboot));
 		*(.text*)
-		*(.rodata)
 	}
 
-	.data : {
+	.rodata BLOCK(4K): ALIGN(4K){
+		*(.rodata)
+	}
+	.data BLOCK(4K) : ALIGN(4K) {
 		/*Global scope/static constructors*/
 		start_ctors = .;
 		KEEP(*( .init_array ));
@@ -23,7 +23,8 @@ SECTIONS{
 		*(.data)
 	}
 
-	.bss : {
+	.bss BLOCK(4K): ALIGN(4K){
+		*(COMMON)
 		*(.bss)
 	}
 	

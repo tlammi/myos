@@ -28,7 +28,9 @@ myos.iso: myos.bin
 	echo '  boot' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
 	echo '' >> iso/boot/grub/grub.cfg
-	genisoimage -o $@ iso
+	#genisoimage -o $@ iso
+	grub-mkrescue --output=$@ iso
+
 
 clean:
 	rm -f myos.bin

@@ -10,7 +10,6 @@ constexpr char NOTE{'2'};
 constexpr char WARN{'3'};
 constexpr char ERR{'4'};
 
-constexpr int PRINT_BASE{0xb8000};
 
 class print{
 public:
@@ -22,6 +21,7 @@ public:
 	
 	inline print& operator<<(const char* str){
 		printf(str);
+		return *this;
 	}
 private:
 
