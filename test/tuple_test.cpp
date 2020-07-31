@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "knl/tuple.hpp"
+#include "knl/utility.hpp"
+#include "knl/type_traits.hpp"
 
 TEST(TupleTest, One){
 	knl::Tuple<int> tupl;
@@ -39,4 +41,11 @@ TEST(TupleTest, MultipleSame){
 	ASSERT_EQ(tupl.get<1>(), 2);
 	ASSERT_EQ(tupl.get<2>(), 3);
 	ASSERT_EQ(tupl.get<3>(), 4);
+}
+
+TEST(TupleTest, PairAndTuple){
+	knl::Pair<int,double> pair;
+	knl::Tuple<int,double> tupl;
+	bool val = knl::is_same_v<knl::Pair<int,double>,knl::Tuple<int,double>>;
+	ASSERT_TRUE(val);
 }

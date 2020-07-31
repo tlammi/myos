@@ -12,11 +12,12 @@ struct true_type{
 
 template<typename T, typename U>
 struct is_same: public false_type{};
+
 template<typename T>
 struct is_same<T, T>: public true_type{};
 
 template<typename T, typename U>
-using is_same_v = typename is_same<T, U>::value;
+constexpr bool is_same_v = is_same<T, U>::value;
 
 
 template<size_t S, typename First, typename... Types>
@@ -29,6 +30,5 @@ struct nth_type<0, First, Types...>{
 
 template<size_t S, typename First, typename... Types>
 using nth_type_t = typename nth_type<S, First, Types...>::type;
-
 
 }
