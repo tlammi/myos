@@ -5,59 +5,65 @@
 
 namespace knl{
 
+
 template<size_t Index, typename Type>
 class _TupleImpl{
 public:
-	Type val_;
+	inline _TupleImpl(){}
+	inline _TupleImpl(const Type& val): val_{val}{}
+	inline _TupleImpl(Type&& val): val_{val}{}
+protected:
+	inline Type& get(){return val_;}
+	inline const Type& get() const {return val_;}
+private:
+	Type val_{};
 };
 
-template<size_t Index, typename First=void, typename... Types>
+template<size_t Index, size_t TypeCount, typename... Types>
 class _TupleRecur:
-	public _TupleImpl<Index, First>,
-	public _TupleRecur<Index+1, Types...> {
+	public _TupleImpl<Index, nth_type_t<Index, Types...>>,
+	public _TupleRecur<Index+1, TypeCount, Types...>{
 public:
 	template<typename T>
 	T& get(){
-		if constexpr(is_same<T, First>::value){
-			return static_cast<_TupleImpl<Index, First>*>(this)->val_;
-		}
-		else{
-			return static_cast<_TupleRecur<Index+1, Types...>*>(this)-> template get<T>();
-		}
+		if constexpr(is_same_v<T, nth_type_t<Index, Types...>>)
+			return _TupleImpl<Index, nth_type_t<Index, Types...>>::get();
+
+		else
+			return _TupleRecur<Index+1, TypeCount, Types...>:: template get<T>();
 	}
 
-	template<size_t S, typename T = typename nth_type<S-Index, First, Types...>::type>
-	T& get(){
-		if constexpr (S == Index){
-			return static_cast<_TupleImpl<Index, First>*>(this)->val_;
-		} else{
-			return static_cast<_TupleRecur<Index+1, Types...>*>(this)-> template get<S>();
-		}
-	}
-};
-
-template<size_t Index>
-class _TupleRecur<Index, void>{};
-
-template<typename First=void, typename... Types>
-class Tuple: public _TupleRecur<0, First, Types...>{
-public:
 	template<typename T>
-	inline T& get(){
-		return static_cast<_TupleRecur<0, First, Types...>*>(this)-> template get<T>();
+	const T& get() const {
+		if constexpr(is_same_v<T, nth_type_t<Index, Types...>>)
+			return _TupleImpl<Index, nth_type_t<Index, Types...>>::get();
+		else
+			return _TupleRecur<Index+1, TypeCount, Types...>:: template get<T>();
 	}
 
-	template<size_t S, typename T = typename nth_type<S, First, Types...>::type>
-	inline T& get(){
-		return static_cast<_TupleRecur<0, First, Types...>*>(this)-> template get<S>();
+	template<size_t S>
+	nth_type_t<S, Types...>& get() {
+		if constexpr(S == Index)
+			return _TupleImpl<Index, nth_type_t<Index, Types...>>::get();
+		else
+			return _TupleRecur<Index+1, TypeCount, Types...>:: template get<S>();
 	}
 
-	constexpr size_t size() const {
-		if constexpr(is_same<First, void>::value){
-			return 0;
-		}
-		return sizeof...(Types)+1;
+	template<size_t S>
+	const nth_type_t<S, Types...>& get() const {
+		if constexpr(S == Index)
+			return _TupleImpl<Index, nth_type_t<Index, Types...>>::get();
+		else
+			return _TupleRecur<Index+1, TypeCount, Types...>:: template get<S>();
 	}
 };
 
+template<size_t Index, typename... Types>
+class _TupleRecur<Index, Index, Types...>{};
+
+template<typename... Types>
+class Tuple: public _TupleRecur<0, sizeof...(Types), Types...>{
+public:
+	constexpr size_t size(){return sizeof...(Types);}
+};
 }

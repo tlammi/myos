@@ -3,6 +3,7 @@
 #include "knl/utility.hpp"
 #include "knl/type_traits.hpp"
 
+
 TEST(TupleTest, One){
 	knl::Tuple<int> tupl;
 	ASSERT_EQ(tupl.size(), 1);
@@ -48,4 +49,10 @@ TEST(TupleTest, PairAndTuple){
 	knl::Tuple<int,double> tupl;
 	bool val = knl::is_same_v<knl::Pair<int,double>,knl::Tuple<int,double>>;
 	ASSERT_TRUE(val);
+}
+
+TEST(TupleTest, Ctor){
+	knl::Tuple<int,double> tpl{1, 10.0};
+	ASSERT_EQ(tpl.get<0>(), 1);
+	ASSERT_EQ(tpl.get<double>(), 10.0);
 }

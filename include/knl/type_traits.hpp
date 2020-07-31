@@ -28,7 +28,18 @@ struct nth_type<0, First, Types...>{
 	using type = First;
 };
 
+template<size_t S, typename... Types>
+using nth_type_t = typename nth_type<S, Types...>::type;
+
+
 template<size_t S, typename First, typename... Types>
-using nth_type_t = typename nth_type<S, First, Types...>::type;
+constexpr nth_type_t<S, First, Types...> nth_value(First first, Types... args){
+	return nth_value<S-1, Types...>(std::forward<Types>(args)...);
+}
+
+template<typename First, typename... Types>
+constexpr First nth_value(First first, Types... args){
+	return first;
+}
 
 }
