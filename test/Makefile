@@ -1,6 +1,6 @@
 
-CCFLAGS = --std=c++17 -lgtest -I../include -I../arch/x86/include
-
+CCFLAGS = --std=c++17 -I../include -I../arch/virtual/include
+LDFLAGS = -lgtest -lpthread
 objs = main.o tuple_test.o
 
 all: run_tests
@@ -10,7 +10,7 @@ all: run_tests
 	g++ $(CCFLAGS) -o $@ -c $<
 
 tests: $(objs)
-	g++ $(CCFLAGS) -o $@ $^ 
+	g++ -o $@ $^ $(LDFLAGS)
 
 run_tests: tests
 	./tests

@@ -1,2 +1,3 @@
-objs += src/main.o
+objs-$(DIR) += main.o
+
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "arch/types.h"
+#include "arch/types.hpp"
 
 #define __ASSERT_SIZE(prefix, suffix) static_assert(sizeof(prefix ## suffix) == suffix / 8)
 #define ASSERT_SIZES(prefix) \
