@@ -1,11 +1,12 @@
 ARCH := x86
-SUBDIRS := src arch/$(ARCH)
+SUBDIR_WHITELIST := src arch/$(ARCH)
+CHILD_MAKEFILE_DIRS := $(foreach dir,$(SUBDIR_WHITELIST),$(shell find $(dir) -name Makefile -type f | xargs dirname))
 objs :=
 
 # Iterate SUBDIRS variable and include Makefile from each
 #
 # Also sets DIR-variable to point to target Makefile's containing directory
-include_subdirs := $(foreach dir,$(SUBDIRS),$(eval DIR:=$(dir))$(eval include $(dir)/Makefile))
+include_child_makefiles := $(foreach dir,$(CHILD_MAKEFILE_DIRS),$(eval DIR:=$(dir))$(eval include $(dir)/Makefile))
 
 # Drops variable suffix moving it to value prefix
 #
@@ -19,10 +20,10 @@ endef
 # E.g. $(call join_suffices,objs) will join all variables with format objs-<suffix>
 # to one, modifying the variable values according to suffix_to_path.
 define join_suffices
-$(foreach dir,$(SUBDIRS),$(call suffix_to_path,$1,$(dir)))
+$(foreach dir,$(CHILD_MAKEFILE_DIRS),$(call suffix_to_path,$1,$(dir)))
 endef
 
-$(call include_subdirs)
+$(call include_child_makefiles)
 objs += $(call join_suffices,objs)
 
 INC_DIRS = -Iinclude -Iarch/$(ARCH)/include

@@ -4,7 +4,3 @@ CXXFLAGS := --std=c++17 -g -O0 -m32 -fno-use-cxa-atexit \
 ASFLAGS := --32
 LDFLAGS := -melf_i386 -T $(DIR)/linker.ld
 
-
-include $(DIR)/src/Makefile
-objs-$(DIR) := $(addprefix src/, $(objs-arch))
-

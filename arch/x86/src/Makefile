@@ -1,1 +1,1 @@
-objs-arch += printf.o entry.o
+objs-$(DIR) += printf.o entry.o
