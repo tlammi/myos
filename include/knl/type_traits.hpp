@@ -1,5 +1,8 @@
 #pragma once
 
+#include <knl/bits/remove_reference.hpp>
+#include <knl/bits/forward.hpp>
+
 namespace knl{
 
 struct false_type{
@@ -34,7 +37,7 @@ using nth_type_t = typename nth_type<S, Types...>::type;
 
 template<size_t S, typename First, typename... Types>
 constexpr nth_type_t<S, First, Types...> nth_value(First first, Types... args){
-	return nth_value<S-1, Types...>(std::forward<Types>(args)...);
+	return nth_value<S-1, Types...>(forward<Types>(args)...);
 }
 
 template<typename First, typename... Types>
